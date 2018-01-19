@@ -1,4 +1,4 @@
-package auctioneero;
+package com.scraniel.auctioneero.tables;
 
 import java.util.Date;
 import java.util.UUID;

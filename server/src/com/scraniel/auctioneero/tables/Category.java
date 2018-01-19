@@ -1,4 +1,4 @@
-package auctioneero;
+package com.scraniel.auctioneero.tables;
 
 
 //TODO: Change this to read in from XML (JAXB)

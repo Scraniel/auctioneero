@@ -1,4 +1,4 @@
-package auctioneero;
+package com.scraniel.auctioneero;
 
 import java.sql.Timestamp;
 import java.util.UUID;

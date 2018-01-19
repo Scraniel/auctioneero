@@ -1,4 +1,4 @@
-package auctioneero;
+package com.scraniel.auctioneero;
 
 public class AuctionResponse 
 {
