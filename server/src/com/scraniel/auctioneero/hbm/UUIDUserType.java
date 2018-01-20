@@ -1,4 +1,4 @@
-package com.scraniel.auctioneero.util;
+package com.scraniel.auctioneero.hbm;
 
 import java.io.Serializable;
 import java.sql.PreparedStatement;
@@ -11,8 +11,8 @@ import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.usertype.UserType;
 
-//TODO: Extract into immutable type baseclass
-public class SqlUUID implements UserType 
+//TODO: Extract into immutable type baseclass (eg. everything but get / set)
+public class UUIDUserType implements UserType 
 {
 	@Override
 	public boolean isMutable() 
@@ -71,9 +71,12 @@ public class SqlUUID implements UserType
     public void nullSafeSet(PreparedStatement st, Object value, int index, SharedSessionContractImplementor session) 
     		throws SQLException 
     {
-        if (value == null) {
-            st.setNull(index, Types.VARCHAR);
-        } else {
+        if (value == null) 
+        {
+            st.setNull(index, Types.CHAR);
+        } 
+        else 
+        {
             st.setString(index, value.toString());
         }
     }

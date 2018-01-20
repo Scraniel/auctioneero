@@ -4,6 +4,8 @@ import java.util.UUID;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.Type;
+
 // TODO: Research how to store passwords; as some hash + salt? Don't want to load plaintext password into memory
 
 @Entity
@@ -11,6 +13,7 @@ import javax.persistence.*;
 public class User 
 {
 	@Id
+	@Type(type="UUID")
 	@Column(name = "id")
 	private UUID id;
 	
