@@ -23,6 +23,11 @@ public class UUIDUserType implements UserType
 	@Override
 	public boolean equals(Object x, Object y) throws HibernateException 
 	{
+		if(x == null)
+		{
+			return x == y;
+		}
+
 	    return x.equals(y);
 	}
 

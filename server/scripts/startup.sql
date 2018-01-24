@@ -13,6 +13,7 @@ CREATE TABLE auction_item (
 	id 				CHAR(36) 		NOT NULL,
 	name 			VARCHAR(20) 	NULL,
 	description 	VARCHAR(128) 	NULL,
+	current_bid		FLOAT			NOT NULL,
 	owner_id		CHAR(36) 		NOT NULL,
 	high_bidder_id 	CHAR(36) 		NULL,
 	category		VARCHAR(20) 	NULL,

@@ -14,26 +14,28 @@ public class HibernateContext
 	private final static HibernateContext instance = new HibernateContext();
 	
 	/**
-	 * Currently just bootstraps hibernate. Private as this is a singleton.
+	 * Private as this is a singleton.
 	 */
-	private HibernateContext() 
-	{
-		hibernateBootstrap();
-		HibernateContext.initialized = true;
-	}
+	private HibernateContext() {}
 	
 	/**
 	 * Sets up hibernate and creates the SessionFactory for interacting with the DB.
 	 */
-	private void hibernateBootstrap()
+	public void hibernateBootstrap()
 	{
+		// TODO: Throw exception, we should never try to bootstrap more than once
+		if(initialized)
+		{
+			return;
+		}
+		
 		// An example using an implicitly built BootstrapServiceRegistry
 		ServiceRegistry standardRegistry = new StandardServiceRegistryBuilder()
 				.configure()
 				.build();
 
 		// This will add our annotated classes for use later
-		MetadataSources sources = new MetadataSources( standardRegistry );
+		MetadataSources sources = new MetadataSources(standardRegistry);
 		sources.addAnnotatedClass(AuctionItem.class);
 		sources.addAnnotatedClass(User.class);
 		
@@ -42,6 +44,7 @@ public class HibernateContext
 		metadataBuilder.applyBasicType(new UUIDUserType(), "UUID");
 		
 		sessionFactory = metadataBuilder.build().buildSessionFactory();
+		HibernateContext.initialized = true;
 	}
 	
 	/**
@@ -62,6 +65,11 @@ public class HibernateContext
 		return sessionFactory;
 	}
 
+	
+	/**
+	 * Whether or not Hibernate has been bootstrapped.
+	 * @return true if hibernate has been initialized
+	 */
 	public static boolean isInitialized() 
 	{
 		return initialized;

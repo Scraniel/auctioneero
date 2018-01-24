@@ -20,8 +20,8 @@ public class AuctionItem
 	@Column(name = "id", length = 36)
 	private UUID id;
 	
-	@Column(name = "current_price")
-	private float currentPrice;
+	@Column(name = "current_bid")
+	private float currentBid;
 	
 	@Column(name = "name", length = 20)
 	private String name;
@@ -46,14 +46,14 @@ public class AuctionItem
 	///
 	/// GETTERS / SETTERS
 	///
-	public float getCurrentPrice() 
+	public float getCurrentBid() 
 	{
-		return currentPrice;
+		return currentBid;
 	}
 	
-	public void setCurrentPrice(float currentPrice) 
+	public void setCurrentBid(float currentBid) 
 	{
-		this.currentPrice = currentPrice;
+		this.currentBid = currentBid;
 	}
 	
 	public String getName() 
