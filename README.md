@@ -13,6 +13,7 @@ There are 3 main parts:
 3. The server side
     * Handles the business logic by via a RESTful API. This is important so we can decouple the server and client, allowing for connections from multiple difference sources.
 
+![App Structure](misc/AppStructure.jpg?raw=true)
 
 ## [Hibernate](http://hibernate.org/) & [MySQL](https://www.mysql.com/)
 Hibernate will be used as the ORM (Object-Relational Mapping) tool, bridging the gap between the database and in-memory objects. This is to make it more fluid to work with the database in code, having to worry much less about parsing output from raw SQL queries. The RDBMS (Relational Database Management System) that will be used is MySQL, persisting objects such as user and auction item info.
