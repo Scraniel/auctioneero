@@ -24,8 +24,8 @@ public class User extends HibernateTable
 	}
 
 	@Override
-	protected String getSuccessfulInsertMessage() {
-		// TODO Auto-generated method stub
-		return null;
+	protected String getSuccessfulInsertMessage() 
+	{
+		return String.format("The user '%s' has been successfully added", userName);
 	}
 }
