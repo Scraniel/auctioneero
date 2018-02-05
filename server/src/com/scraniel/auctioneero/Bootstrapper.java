@@ -12,18 +12,32 @@ public class Bootstrapper
 {
 
 	public static void main(String[] args) 
-	{		
-		// Bootstrap hibernate so we can run some queries
+	{	
 		HibernateContext context = HibernateContext.getInstance();
-		context.hibernateBootstrap();
-		
-		AuctionManager manager = new AuctionManager();
-		
-		// Test adding
-		AuctionResponse response =  manager.addUser("Jimbo");
-		if(response.isActionSuccess())
+		try
 		{
-			manager.addItem("Cool Item", "This item is so, so cool", response.getId(), 27.32f, new Timestamp(100000));
+			// Bootstrap hibernate so we can run some queries			
+			context.hibernateBootstrap();
+			
+			AuctionManager manager = new AuctionManager();
+			
+			// Test adding
+			AuctionResponse response =  manager.addUser("Calimbo");
+			if(response.isActionSuccess())
+			{
+				manager.addItem("Cool Item 2", "This item is so, so, SO cool", response.getId(), 32.32f, new Timestamp(100000));
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace(System.err);
+		}
+		finally
+		{
+			if(context.getSessionFactory().isOpen())
+			{
+				context.getSessionFactory().close();
+			}
 		}
 	}
 	

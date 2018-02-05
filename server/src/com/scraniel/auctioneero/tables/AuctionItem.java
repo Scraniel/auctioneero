@@ -5,20 +5,17 @@ import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.hibernate.annotations.Type;
 
+import com.scraniel.auctioneero.hbm.HibernateTable;
+
 @Entity
 @Table(name = "auction_item")
-public class AuctionItem 
+public class AuctionItem extends HibernateTable
 {
-	@Id
-	@Type(type = "UUID")
-	@Column(name = "id", length = 36)
-	private UUID id;
 	
 	@Column(name = "current_bid")
 	private float currentBid;
@@ -76,16 +73,6 @@ public class AuctionItem
 		this.description = description;
 	}
 	
-	public UUID getId() 
-	{
-		return id;
-	}
-	
-	public void setId(UUID id) 
-	{
-		this.id = id;
-	}
-	
 	public UUID getOwnerId() 
 	{
 		return ownerId;
@@ -135,6 +122,12 @@ public class AuctionItem
 	public void setExpiry(Timestamp expiry) 
 	{
 		this.expiry = expiry;
+	}
+
+	@Override
+	protected String getSuccessfulInsertMessage() 
+	{
+		return String.format("The item '%s' has been added with initial bid %.2f", name, currentBid);
 	}
 	
 }

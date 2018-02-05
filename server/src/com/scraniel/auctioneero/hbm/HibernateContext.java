@@ -5,6 +5,7 @@ import org.hibernate.boot.*;
 import org.hibernate.boot.registry.*;
 import org.hibernate.service.*;
 
+import com.scraniel.auctioneero.AuctionResponse;
 import com.scraniel.auctioneero.tables.*;
 
 public class HibernateContext 
@@ -45,6 +46,46 @@ public class HibernateContext
 		
 		sessionFactory = metadataBuilder.build().buildSessionFactory();
 		HibernateContext.initialized = true;
+	}
+	
+	/**
+	 * Executes a generic sql statement of the form:
+	 * 
+	 * 1. Begin transaction
+	 * 2. Execute statement
+	 * 3. Commit transaction
+	 * 
+	 * Will catch exceptions rollback if required. 
+	 * @param toExecute The sql statement to execute.
+	 * @return AuctionResponse with success message + ID or error mesage.
+	 */
+	public AuctionResponse executeSqlStatement(HibernateSqlStatement toExecute)
+	{		
+		Session session = sessionFactory.openSession();
+		Transaction transaction = null;
+		AuctionResponse response;
+		
+		try 
+		{
+			transaction = session.beginTransaction();
+			response = toExecute.execute(session);
+			transaction.commit();
+		} 
+		catch (HibernateException e) 
+		{
+		   if (transaction != null)
+		   {
+			   transaction.rollback();
+		   }
+		   
+		   response = new AuctionResponse(false, e.getMessage(), null);		   
+		} 
+		finally 
+		{
+		   session.close(); 
+		}
+		
+		return response;
 	}
 	
 	/**

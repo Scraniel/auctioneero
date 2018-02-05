@@ -32,6 +32,14 @@ public class AuctionManager
 		// BEGIN;
 		// SELECT * FROM items WHERE item_id = '{itemId}' FOR UPDATE;
 		//
+		HibernateContext context = HibernateContext.getInstance();
+		SessionFactory sessionFactory = context.getSessionFactory();
+		
+		Session session = sessionFactory.openSession();
+		Transaction transaction = null;
+		
+		session.load(AuctionItem.class, itemId, LockOptions.UPGRADE);
+		
 		
 		// 2. Check the expiry and price, abort if too high. Don't want to do fully in SQL so we can return current bid
 		//
@@ -84,21 +92,7 @@ public class AuctionManager
 		
 		// 2. if there is no conflict, insert a new row
 		//
-		boolean isInserted = sqlInsert(item);
-		String responseMessage = null;
-
-		if(isInserted)
-		{
-			responseMessage = String.format("Your item '%s' has been added with a starting bid of %f", name, startingBid);
-		}
-		else
-		{
-			// TODO: Possibly check for error reason, then we can say if, for example, it was due to duplicate
-			responseMessage = String.format("An error occured, item '%s' was not added.", name);
-			id = null;
-		}	
-		
-		return new AuctionResponse(isInserted, responseMessage, id);
+		return item.insert();
 	}
 	
 	// Removes an item currently up for auction
@@ -108,73 +102,23 @@ public class AuctionManager
 	}
 	
 	
+	/**
+	 * Adds a new user. Currently we don't use username as primary key, think about changing this.
+	 * 
+	 * TODO: Add password (salt + hash) 
+	 * 
+	 * @param userName The username of the new user 
+	 * @return AuctionResponse containing UUID of new user or error message if it fails
+	 */
 	public AuctionResponse addUser(String userName)
 	{		
 		User newUser = new User();
-		UUID id = UUID.randomUUID();
+		UUID id = UUID.randomUUID();		
 	   
 		newUser.setId(id);
 		newUser.setUserName(userName);
-		boolean isInserted = sqlInsert(newUser);
-		String responseMessage = null;
-
-		if(isInserted)
-		{
-			responseMessage = String.format("User %s was added.", userName);
-		}
-		else
-		{
-			// TODO: Possibly check for error reason, then we can say if, for example, it was due to duplicate
-			responseMessage = String.format("An error occured, user %s was not added.", userName);
-			id = null;
-		}
 		
-		return new AuctionResponse(isInserted, responseMessage, id);
+		return newUser.insert();
 	}
 	
-	
-	/*
-	 * Utility functions, mainly common interactions with DB
-	 */
-	
-	/**
-	 * Inserts an item into the table.
-	 * NOTE: Currently does not have any logic for handling duplicates, will just throw exception.
-	 * @param itemToInsert Must be properly annotated and filled in. Will insert into the table specified by annotation.
-	 * @return True if the record was inserted properly
-	 */
-	private boolean sqlInsert(Object itemToInsert)
-	{
-		HibernateContext context = HibernateContext.getInstance();
-		SessionFactory sessionFactory = context.getSessionFactory();
-		
-		Session session = sessionFactory.openSession();
-		Transaction transaction = null;
-		boolean insertOkay = true;
-		
-		try 
-		{
-			transaction = session.beginTransaction();
-			session.save(itemToInsert);
-			transaction.commit();
-		} 
-		catch (HibernateException e) 
-		{
-		   if (transaction != null)
-		   {
-			   transaction.rollback();
-		   }
-		   
-		   System.err.println(e.getMessage());
-		   e.printStackTrace(); 
-		   
-		   insertOkay = false;
-		} 
-		finally 
-		{
-		   session.close(); 
-		}
-		
-		return insertOkay;
-	}
 }

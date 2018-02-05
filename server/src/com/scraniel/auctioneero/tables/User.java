@@ -1,22 +1,15 @@
 package com.scraniel.auctioneero.tables;
 
-import java.util.UUID;
-
 import javax.persistence.*;
 
-import org.hibernate.annotations.Type;
+import com.scraniel.auctioneero.hbm.HibernateTable;
 
 // TODO: Research how to store passwords; as some hash + salt? Don't want to load plaintext password into memory
 
 @Entity
 @Table(name = "user")
-public class User 
+public class User extends HibernateTable
 {
-	@Id
-	@Type(type="UUID")
-	@Column(name = "id")
-	private UUID id;
-	
 	@Column(name = "user_name")
 	private String userName;
 	
@@ -29,14 +22,10 @@ public class User
 	{
 		this.userName = userName;
 	}
-	
-	public UUID getId() 
-	{
-		return id;
-	}
-	
-	public void setId(UUID id) 
-	{
-		this.id = id;
+
+	@Override
+	protected String getSuccessfulInsertMessage() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
