@@ -23,9 +23,23 @@ public class Bootstrapper
 			
 			// Test adding
 			AuctionResponse response =  manager.addUser("Calimbo");
+			UUID ownerId = response.getId();
+			response =  manager.addUser("Jimmy");
+			UUID bidderId = response.getId();
 			if(response.isActionSuccess())
 			{
-				manager.addItem("Cool Item 2", "This item is so, so, SO cool", response.getId(), 32.32f, new Timestamp(100000));
+				response = manager.addItem("Cool Item 3", "This item is neat", ownerId, 33.32f, new Timestamp(System.currentTimeMillis() + 100000));
+				
+				if(response.isActionSuccess())
+				{
+					response = manager.bidOnItem(response.getId(), bidderId, 30);
+					
+					System.out.println(response.getOutputMessage());
+					
+					response = manager.cancelAuction(response.getId());
+					
+					System.out.println(response.getOutputMessage());
+				}
 			}
 		}
 		catch(Exception e)

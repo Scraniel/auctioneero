@@ -57,11 +57,10 @@ public class HibernateContext
 	 * 
 	 * Will catch exceptions rollback if required. 
 	 * @param toExecute The sql statement to execute.
-	 * @return AuctionResponse with success message + ID or error mesage.
+	 * @return AuctionResponse with success message + ID or error message.
 	 */
-	public AuctionResponse executeSqlStatement(HibernateSqlStatement toExecute)
+	public AuctionResponse executeSqlStatement(HibernateSqlStatement toExecute, Session session)
 	{		
-		Session session = sessionFactory.openSession();
 		Transaction transaction = null;
 		AuctionResponse response;
 		
@@ -86,6 +85,16 @@ public class HibernateContext
 		}
 		
 		return response;
+	}
+	
+	/**
+	 * 
+	 * @param toExecute
+	 * @return
+	 */
+	public AuctionResponse executeSqlStatement(HibernateSqlStatement toExecute)
+	{		
+		return executeSqlStatement(toExecute, sessionFactory.openSession());
 	}
 	
 	/**

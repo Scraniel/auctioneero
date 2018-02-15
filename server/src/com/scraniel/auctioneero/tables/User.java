@@ -28,4 +28,10 @@ public class User extends HibernateTable
 	{
 		return String.format("The user '%s' has been successfully added", userName);
 	}
+	
+	@Override
+	protected String getSuccessfulDeleteMessage() 
+	{
+		return "User deleted successfully.";
+	}
 }
